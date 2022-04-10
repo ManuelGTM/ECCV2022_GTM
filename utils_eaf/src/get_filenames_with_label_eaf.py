@@ -26,7 +26,7 @@ def write_list_filename(list_filenames, filepath):
     print ('write_list_filename: {}'.format(filepath))
     print ('list_filenames: {}'.format(list_filenames))
     
-    with open(filepath, 'w') as file_handler:
+    with open(filepath, 'w', encoding="utf-8", errors="ignore") as file_handler:
         for item in list_filenames:
             file_handler.write("{}\n".format(item))
     
