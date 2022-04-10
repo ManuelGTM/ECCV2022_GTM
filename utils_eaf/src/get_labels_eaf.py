@@ -44,6 +44,6 @@ if __name__ == '__main__':
     main(arg)
 
 
-# python get_labels_eaf.py --input /home/temporal2/mvazquez/Challenge/utils_eaf/data/9ABR/ANOTADOS_cut
+# python correct_eaf.py --input /home/temporal2/mvazquez/Challenge/utils_eaf/data/8ABR/eaf --output /home/temporal2/mvazquez/Challenge/utils_eaf/data/8ABR/eaf_ok --corrections corrections.txt --deletes deletes.txt
 # python get_labels_eaf.py --input /home/temporal2/mvazquez/Challenge/utils_eaf/data/9ABR/ANOTADOS_TRACK1_cut
 # python get_labels_eaf.py --input /home/temporal2/mvazquez/Challenge/utils_eaf/data/9ABR/ANOTADOS_TRACK2_cut
