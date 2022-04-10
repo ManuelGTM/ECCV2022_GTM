@@ -13,7 +13,7 @@ def create_folder(folder):
 def parser_file(filepath):
     print ('parser_file')
     removes = []
-    with open(filepath) as f:
+    with open(filepath, errors="ignore") as f:
         contents = f.readlines()
         try:
             for line in contents:
