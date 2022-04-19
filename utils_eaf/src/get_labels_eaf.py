@@ -1,14 +1,6 @@
 import pympi
 import os
 import argparse
-
-def create_folder(folder):
-    print ('create_folder: {}'.format(folder))    
-    try:
-        os.makedirs(folder)    
-        print("Directory " , folder ,  " Created ")
-    except FileExistsError:
-        print("Directory " , folder ,  " already exists")
         
 def eaf_get_list_anns(path_folder_eaf):
     lst_files = os.listdir(path_folder_eaf)

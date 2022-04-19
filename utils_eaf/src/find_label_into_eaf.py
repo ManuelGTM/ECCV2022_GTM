@@ -3,18 +3,8 @@ import os
 import argparse
 import datetime
 import numpy as np
+import utils
 
-def create_folder(folder):
-    print ('create_folder: {}'.format(folder))    
-    try:
-        os.makedirs(folder)    
-        print("Directory " , folder ,  " Created ")
-    except FileExistsError:
-        print("Directory " , folder ,  " already exists")
-        
-def format_milliseconds_HH_MM_SS_MS(milliseconds):
-    return datetime.timedelta(milliseconds=int(milliseconds))
-        
             
 def eaf_seach_annotation(path_folder_eaf, annotation_searched):
     lst_files = os.listdir(path_folder_eaf)
@@ -30,8 +20,9 @@ def eaf_seach_annotation(path_folder_eaf, annotation_searched):
             for annotation in eafob.get_annotation_data_for_tier(ort_tier_names[0]):
                 try:
                     label = annotation[2].replace('*','')
+                    print(label)
                     if label ==  annotation_searched:
-                        line = 'find {} in {} interval {} - {}'.format(annotation, filepath_in, format_milliseconds_HH_MM_SS_MS(annotation[0]), format_milliseconds_HH_MM_SS_MS(annotation[1]))
+                        line = 'find {} in {} interval {} - {}'.format(annotation, filepath_in, utils.format_milliseconds_HH_MM_SS_MS(annotation[0]), utils.format_milliseconds_HH_MM_SS_MS(annotation[1]))
                         filename = elan_file.replace('.eaf','')
                         entry = np.array([filename,annotation[0], annotation[1]])
                         intervals.append(entry)
@@ -42,9 +33,9 @@ def eaf_seach_annotation(path_folder_eaf, annotation_searched):
                 except:
                     print('exception')
                 pass
-        
     return np.asarray(intervals), list_filenames
-    
+
+
 def main(args):
        
     folder_in =args.input
@@ -69,3 +60,4 @@ if __name__ == '__main__':
 
 
 # python find_label_into_eaf.py --input /home/temporal2/mvazquez/Challenge/utils_eaf/data/8ABR/eaf --label :
+# python find_label_into_eaf.py --input /home/temporal2/mvazquez/Challenge/utils_eaf/data/10ABR2/ANOTADO_ANIA --label :

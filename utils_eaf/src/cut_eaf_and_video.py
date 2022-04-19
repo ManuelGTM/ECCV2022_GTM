@@ -1,62 +1,9 @@
-import pympi
 import os
 import argparse
-import numpy as np
 import find_label_into_eaf
+import utils
 
-def create_folder(folder):
-    print ('create_folder: {}'.format(folder))    
-    try:
-        os.makedirs(folder)    
-        print("Directory " , folder ,  " Created ")
-    except FileExistsError:
-        print("Directory " , folder ,  " already exists")
 
-def segmentation_video(filepath_in, filepath_out, start, end, idx):
-    
-    video_path='{}.mp4'.format(filepath_in)
-    out_video_path='{}_{}.mp4'.format(filepath_out, idx)
-    
-    start = start * 1e-3
-    end = end * 1e-3
-    dur = end - start
-    
-    if dur>0:
-        cmd = 'ffmpeg -i {} -ss {} -t {} {} -loglevel quiet'.format(video_path,  start, dur, out_video_path)
-    else:
-        cmd = 'ffmpeg -i {} -ss {} {} -loglevel quiet'.format(video_path,  start, out_video_path)
-    print (cmd)
-    
-    os.system(cmd)
-    
-def segmentation_eaf(filepath_in, filepath_out, start, end, idx):
-    
-    eaf_path='{}.eaf'.format(filepath_in)
-    out_eaf_path='{}_{}.eaf'.format(filepath_out, idx)
-    
-    eafob = pympi.Elan.Eaf(eaf_path)
-    eafob_new = pympi.Elan.Eaf(eaf_path)
-    eafob_new.remove_linked_files(mimetype='video/mp4')
-    
-    relpath = './{}_{}.mp4'.format(os.path.basename(filepath_in), idx)
-    eafob_new.add_linked_file('{}.mp4'.format(relpath),relpath=relpath, mimetype='video/mp4')
-    
-    ort_tier_names=list(eafob.get_tier_names())
-    
-    for tier_idx in ort_tier_names:
-
-        eafob_new.remove_tier(tier_idx,clean=True)
-        eafob_new.add_tier(tier_idx)
-        
-        for annotation in eafob.get_annotation_data_for_tier(tier_idx):
-            
-            if (annotation[0]>start):
-                if (annotation[0]<end or end<0):
-                    eafob_new.add_annotation(tier_idx, annotation[0] - start, annotation[1] - start, value=annotation[2])
-            
-    eafob_new.to_file(out_eaf_path)
-
-    
 def main(args):
        
     folder_in =args.input
@@ -69,14 +16,13 @@ def main(args):
     print ('label: {}'.format(label))
     print ('remove: {}'.format(remove))
     
-    create_folder(folder_out)
+    utils.create_folder(folder_out)
     
     arr_detections, list_filenames = find_label_into_eaf.eaf_seach_annotation(folder_in, label)
     print(arr_detections)
     print('filenames: {}'.format(list_filenames))
     
     # Get same file_id
-    
     
     for filename_idx in list_filenames:
         try:
@@ -97,12 +43,12 @@ def main(args):
                 
                 end = int(detection_idx[1])
                 
-                segmentation_video(filepath_in, filepath_out, start, end, idx)
-                segmentation_eaf(filepath_in, filepath_out, start, end, idx)
+                utils.segmentation_video(filepath_in, filepath_out, start, end, idx)
+                utils.segmentation_eaf(filepath_in, filepath_out, start, end, idx)
                 start = int(detection_idx[2])
                 
-            segmentation_video(filepath_in, filepath_out, start, -1, idx+1)
-            segmentation_eaf(filepath_in, filepath_out, start, -1, idx+1)
+            utils.segmentation_video(filepath_in, filepath_out, start, -1, idx+1)
+            utils.segmentation_eaf(filepath_in, filepath_out, start, -1, idx+1)
             
             if remove:
                 cmd = 'rm {}.eaf'.format(filepath_in)

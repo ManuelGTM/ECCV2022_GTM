@@ -1,27 +1,8 @@
 import os
 import argparse
 import find_label_into_eaf
+import utils
 
-def create_folder(folder):
-    print ('create_folder: {}'.format(folder))    
-    try:
-        os.makedirs(folder)    
-        print("Directory " , folder ,  " Created ")
-    except FileExistsError:
-        print("Directory " , folder ,  " already exists")
-        
-def parser_file(filepath):
-    print ('parser_file')
-    removes = []
-    with open(filepath, errors="ignore") as f:
-        contents = f.readlines()
-        try:
-            for line in contents:
-                removes.append(line.strip())
-        except:
-            pass
-    return removes    
-    
 def write_list_filename(list_filenames, filepath):
     print ('write_list_filename: {}'.format(filepath))
     print ('list_filenames: {}'.format(list_filenames))
@@ -38,7 +19,7 @@ def main(args):
     label =args.label
     file_labels = args.file_labels
     
-    create_folder(folder_out)
+    utils.create_folder(folder_out)
     
     list_labels = []
     if not label == '':
@@ -47,7 +28,7 @@ def main(args):
         pass
     elif not file_labels == '':
         print ('Multiple labels: {}'.format(file_labels))
-        list_labels = parser_file(file_labels)
+        list_labels = utils.parser_file(file_labels)
         pass
     else:
         raise Exception('error need add label o file_labels') 
